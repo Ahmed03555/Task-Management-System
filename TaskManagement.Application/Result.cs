@@ -12,34 +12,40 @@ namespace TaskManagement.Application
         public bool IsSuccess { get; set; }
         public T? Value { get; set; }
         public string? Error { get; set; }
-        public List<string>? Errors { get; set; }
+        public List<string> Errors { get; set; } = new List<string>();
 
         public Result()
         {
 
         }
 
-        private Result(bool isSuccess, T? value, string? error, List<string>? errors)
+        private Result(bool isSuccess, T? value, string? error)
         {
             IsSuccess = isSuccess;
             Value = value;
             Error = error;
-            Errors = errors;
+            
         }
 
         public static Result<T> Success(T value)
         {
-            return new Result<T>(true, value, null, null);
+            return new Result<T>(true, value,null);
         }
 
         public static Result<T> Failure(string error)
         {
-            return new Result<T>(false, default, error, null);
+            return new Result<T>(false, default, error);
         }
 
         public static Result<T> Failure(List<string> errors)
         {
-            return new Result<T>(false, default, null, errors);
+            var result = new Result<T>(false, default, errors?.FirstOrDefault());
+            if (errors != null && errors.Any())
+            {
+                result.Errors.AddRange(errors);
+            }
+
+            return result;
         }
 
     } 

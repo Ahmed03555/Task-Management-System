@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Task Management System/Task Management System.csproj" />
+  <Project Path="TaskManagement.Application/TaskManagement.Application.csproj" Id="f6f7b33b-189b-40d2-adfa-667f87c2916a" />
+  <Project Path="TaskManagement.Domain/TaskManagement.Domain.csproj" Id="3cf8d3ca-ab58-4a85-b4f5-c55bde6c620f" />
+  <Project Path="TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj" Id="7a80110a-d477-4b9f-9550-2cedecc1f38c" />
+</Solution>

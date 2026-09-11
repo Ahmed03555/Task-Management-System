@@ -11,11 +11,11 @@ namespace TaskManagement.Application.Common.Interface
     #region Dependency Inversion Principle
     public interface IApplicationDbContext
     {
-        DbSet<Comment> comments { get; set; }
-        DbSet<User> users { get; set; }
-        DbSet<TaskItem> tasks { get; set; }
+        DbSet<Comment> comments { get;  }
+        DbSet<User> users { get; }
+        DbSet<TaskItem> tasks { get; }
 
-        DbSet<Project> projects { get; set; }
+        DbSet<Project> projects { get;  }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     } 

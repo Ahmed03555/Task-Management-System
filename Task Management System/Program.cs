@@ -1,3 +1,4 @@
+using Task_Management_System.Middlewares;
 using TaskManagement.Application.Common.Behaviors;
 using TaskManagement.Infrastructure;
 
@@ -23,7 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

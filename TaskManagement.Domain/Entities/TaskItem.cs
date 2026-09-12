@@ -11,7 +11,7 @@ namespace TaskManagement.Domain.Entities
         public TaskeStatus Satus { get; set; } = TaskeStatus.ToDo;
         public TaskPriority Priority { get; set; } = TaskPriority.Medium;
         public Guid? ProjectId { get; set; }
-        public Project Project { get; set; } = default!;
+        public Project? Project { get; set; } = default!;
 
         public List<Comment> Comments { get; set; } = new();
     }

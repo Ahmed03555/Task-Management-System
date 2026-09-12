@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Tasks.Commands.CreateTask;
@@ -8,6 +9,10 @@ namespace Task_Management_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    #region When To Authorize Section
+    //[Authorize] 
+    #endregion
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;

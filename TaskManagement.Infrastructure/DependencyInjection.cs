@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Application.Common.Interface;
 using TaskManagement.Infrastructure.Persistence;
+using TaskManagement.Infrastructure.Services;
 
 namespace TaskManagement.Infrastructure
 {
@@ -21,6 +23,7 @@ namespace TaskManagement.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             return services;
         }

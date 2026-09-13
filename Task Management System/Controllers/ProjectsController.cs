@@ -6,6 +6,7 @@ using TaskManagement.Application.Model.Projects.Commands.CreateProject;
 using TaskManagement.Application.Model.Projects.Commands.DeleteProject;
 using TaskManagement.Application.Model.Projects.Commands.UpdateProject;
 using TaskManagement.Application.Model.Projects.Queries;
+using TaskManagement.Application.Model.Projects.Queries.GetProjectById;
 using TaskManagement.Application.Model.Projects.Queries.GetUserProjects;
 
 namespace Task_Management_System.Controllers
@@ -59,6 +60,15 @@ namespace Task_Management_System.Controllers
         {
             var result = await _mediator.Send(new DeleteProjectCommand(id), ct);
             return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+        #endregion
+
+        #region GetProjectById
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProjectById(Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetProjectByIdQuery(id), ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion
 

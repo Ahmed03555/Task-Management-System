@@ -34,9 +34,10 @@ namespace Task_Management_System.Controllers
 
         #region GetUserProjects
         [HttpGet]
-        public async Task<IActionResult> GetMyProjects(CancellationToken ct)
+        public async Task<IActionResult> GetMyProjects([FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetUserProjectsQuery(), ct);
+            var result = await _mediator.Send(new GetUserProjectsQuery(pageNumber, pageSize), ct);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion

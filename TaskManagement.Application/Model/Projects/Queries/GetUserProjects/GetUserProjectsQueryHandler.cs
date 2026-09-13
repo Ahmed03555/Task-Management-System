@@ -9,10 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Application.Common.Interface;
 using TaskManagement.Application.Model.Projects.Common;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TaskManagement.Application.Model.Projects.Queries.GetUserProjects
 {
-    public class GetUserProjectsQueryHandler : IRequestHandler<GetUserProjectsQuery, Result<List<ProjectDto>>>
+    public class GetUserProjectsQueryHandler : IRequestHandler<GetUserProjectsQuery, Result<PaginatedList<ProjectDto>>>
     {
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
@@ -25,17 +26,22 @@ namespace TaskManagement.Application.Model.Projects.Queries.GetUserProjects
             _mapper=mapper;
         }
 
-        public async Task<Result<List<ProjectDto>>> Handle(GetUserProjectsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PaginatedList<ProjectDto>>> Handle(GetUserProjectsQuery request, CancellationToken cancellationToken)
         {
              if(_currentUserService.UserId is null)
-                return Result<List<ProjectDto>>.Failure("User is not authenticated.");
+                return Result<PaginatedList<ProjectDto>>.Failure("User is not authenticated.");
 
-            var projects = await _context.projects
+            var projects = _context.projects
                .Where(p => p.OwnerId == _currentUserService.UserId)
+               .OrderByDescending(p => p.CreatedAt)
                .ProjectTo<ProjectDto>(_mapper.ConfigurationProvider)
-               .ToListAsync(cancellationToken);
+               ;
 
-            return Result<List<ProjectDto>>.Success(projects);
+
+            var paginatedList = await PaginatedList<ProjectDto>.CreateAsync(
+                 projects, request.PageNumber, request.PageSize, cancellationToken);
+
+            return Result<PaginatedList<ProjectDto>>.Success(paginatedList);
         }
     }
 }

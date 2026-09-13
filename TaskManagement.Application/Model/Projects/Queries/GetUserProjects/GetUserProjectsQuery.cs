@@ -8,7 +8,10 @@ using TaskManagement.Application.Model.Projects.Common;
 
 namespace TaskManagement.Application.Model.Projects.Queries.GetUserProjects
 {
-    public record GetUserProjectsQuery() : IRequest<Result<List<ProjectDto>>>;
+    public record GetUserProjectsQuery(
+        int PageNumber = 1,
+        int PageSize = 10
+        ) : IRequest<Result<PaginatedList<ProjectDto>>>;
     
     
 }

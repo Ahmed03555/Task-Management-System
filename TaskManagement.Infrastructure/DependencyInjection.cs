@@ -56,6 +56,14 @@ namespace TaskManagement.Infrastructure
             });
 
             #endregion
+
+            #region HttpContextAccessor
+            services.AddHttpContextAccessor();
+            #endregion
+
+            #region CurrentUserService 
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            #endregion
             return services;
         }
     } 

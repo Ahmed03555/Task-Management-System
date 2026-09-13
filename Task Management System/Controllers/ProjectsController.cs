@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Projects.Commands.CreateProject;
+using TaskManagement.Application.Model.Projects.Commands.DeleteProject;
+using TaskManagement.Application.Model.Projects.Commands.UpdateProject;
 using TaskManagement.Application.Model.Projects.Queries;
 using TaskManagement.Application.Model.Projects.Queries.GetUserProjects;
 
@@ -37,5 +39,28 @@ namespace Task_Management_System.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion
+        #region UpdateProject
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> Update(Guid id, UpdateProjectCommand command, CancellationToken ct)
+        {
+            if (id != command.Id)
+                return BadRequest("Id mismatch.");
+
+            var result = await _mediator.Send(command, ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+        #endregion
+
+        #region DeleteProject
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new DeleteProjectCommand(id), ct);
+            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+        #endregion
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskManagement.Application
 {
-    #region ResultEx
+    #region Result<T>
     public class Result<T>
     {
         public bool IsSuccess { get; set; }
@@ -48,6 +48,23 @@ namespace TaskManagement.Application
             return result;
         }
 
-    } 
+    }
+    #endregion
+
+    #region Result
+    public class Result
+    {
+        public bool IsSuccess { get; }
+        public string? Error { get; }
+
+        private Result(bool isSuccess, string? error)
+        {
+            IsSuccess = isSuccess;
+            Error = error;
+        }
+
+        public static Result Success() => new(true, null);
+        public static Result Failure(string error) => new(false, error);
+    }
     #endregion
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Model.Projects.Common;
 using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject;
 using TaskManagement.Domain.Entities;
 
@@ -14,9 +15,17 @@ namespace TaskManagement.Application.Common.Mappings
     {
         public MappingProfile()
         {
+            #region Task
             CreateMap<TaskItem, TaskDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Satus.ToString()))
-                .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority.ToString()));
+        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Satus.ToString()))
+        .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority.ToString()));
+            #endregion
+
+            #region Project
+
+            CreateMap<Project, ProjectDto>();
+
+            #endregion
         }
     } 
     #endregion

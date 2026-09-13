@@ -1,3 +1,5 @@
+using Microsoft.OpenApi.Models;
+using Task_Management_System.Controllers;
 using Task_Management_System.Middlewares;
 using TaskManagement.Application.Common.Behaviors;
 using TaskManagement.Infrastructure;
@@ -16,6 +18,36 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Input of Authorization
+builder.Services.AddSwaggerGen(options =>
+{
+options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+{
+Name = "Authorization",
+Type = SecuritySchemeType.ApiKey,
+Scheme = "Bearer",
+BearerFormat = "JWT",
+In = ParameterLocation.Header,
+Description = "Enter: Bearer {your JWT token}"
+});
+
+options.AddSecurityRequirement(new OpenApiSecurityRequirement
+{
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+});
+});
+
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +58,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

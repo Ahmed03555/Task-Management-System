@@ -8,11 +8,11 @@ namespace Task_Management_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterUserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public RegisterUserController(IMediator mediator)
+        public UsersController(IMediator mediator)
         {
             _mediator=mediator;
         }

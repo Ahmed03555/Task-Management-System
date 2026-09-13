@@ -38,9 +38,10 @@ namespace Task_Management_System.Controllers
         #region GetTasksByProjectId
 
         [HttpGet("project/{projectId}")]
-        public async Task<IActionResult> GetTasksByProjectId(Guid projectId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetTasksByProjectId(Guid projectId, [FromQuery] int pageNumber = 1,
+         [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(new GetTasksByProjectQuery(projectId), cancellationToken);
+            var result = await _mediator.Send(new GetTasksByProjectQuery(projectId, pageNumber, pageSize), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject
 {
     #region GetTasksByProjectQuery
-    public record GetTasksByProjectQuery(Guid ProjectId) : IRequest<Result<List<TaskDto>>>; 
+    public record GetTasksByProjectQuery(Guid ProjectId, int PageNumber = 1,
+    int PageSize = 10) : IRequest<Result<PaginatedList<TaskDto>>>; 
 	#endregion
 }

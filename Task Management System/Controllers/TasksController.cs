@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Tasks.Commands.CreateTask;
+using TaskManagement.Application.Model.Tasks.Commands.DeleteTask;
 using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject;
 using TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus;
 
@@ -61,6 +62,17 @@ namespace Task_Management_System.Controllers
                 return BadRequest("Task ID mismatch.");
             }
             var result = await _mediator.Send(command, cancellationToken);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
+        }
+        #endregion
+
+        #region DeleteTask
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTask(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteTaskCommand(id), cancellationToken);
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
             return NoContent();

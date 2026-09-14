@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Users.Commands.DeleteUser;
 using TaskManagement.Application.Model.Users.Commands.LoginUser;
+using TaskManagement.Application.Model.Users.Commands.Queries.GetAllUsers;
 using TaskManagement.Application.Model.Users.Commands.RegisterUser;
 
 namespace Task_Management_System.Controllers
@@ -46,6 +47,16 @@ namespace Task_Management_System.Controllers
         {
             var result = await _mediator.Send(new DeleteUserCommand(id), ct);
             return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+        #endregion
+
+        #region GetAllUser
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10,CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(new GetAllUsersQuery(pageNumber, pageSize), ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion
     }

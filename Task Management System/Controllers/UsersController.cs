@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagement.Application.Model.Users.Commands.DeleteUser;
 using TaskManagement.Application.Model.Users.Commands.LoginUser;
 using TaskManagement.Application.Model.Users.Commands.RegisterUser;
 
@@ -33,6 +35,17 @@ namespace Task_Management_System.Controllers
         {
             var result = await _mediator.Send(command, cancellationToken);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+        #endregion
+
+
+        #region DeleteUser
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new DeleteUserCommand(id), ct);
+            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
         }
         #endregion
     }

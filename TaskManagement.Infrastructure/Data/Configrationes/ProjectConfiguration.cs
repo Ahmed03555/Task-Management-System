@@ -21,14 +21,15 @@ namespace TaskManagement.Infrastructure.Data.Configrationes
                 .HasMaxLength(100);
 
             builder.HasOne(p => p.Owner)
-                .WithMany()
+                .WithMany(u => u.Projects)
                 .HasForeignKey(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(p => p.Tasks)
-                .WithOne()
+                .WithOne(t => t.Project)
                 .HasForeignKey(t => t.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+                
         }
     } 
     #endregion

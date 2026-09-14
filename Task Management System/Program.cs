@@ -1,8 +1,13 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Task_Management_System.Controllers;
 using Task_Management_System.Middlewares;
 using TaskManagement.Application.Common.Behaviors;
+using TaskManagement.Application.Model;
 using TaskManagement.Infrastructure;
+using TaskManagement.Infrastructure.Persistence;
+using TaskManagement.Application.Common.Interface;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +55,17 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
 #endregion
 var app = builder.Build();
 
+#region MyRegion
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+    var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSeedSettings>>().Value;
+
+    await dbContext.Database.MigrateAsync();
+    await DbSeeder.SeedAdminUserAsync(dbContext, passwordHasher, adminSettings,CancellationToken.None);
+}
+#endregion
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

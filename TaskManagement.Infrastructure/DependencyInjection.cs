@@ -65,6 +65,10 @@ namespace TaskManagement.Infrastructure
             #region CurrentUserService 
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             #endregion
+
+            #region AdminSeedSettings
+            services.Configure<AdminSeedSettings>(configuration.GetSection("AdminSeed"));
+            #endregion
             return services;
         }
     } 

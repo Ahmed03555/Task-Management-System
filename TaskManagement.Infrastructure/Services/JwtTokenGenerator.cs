@@ -17,13 +17,14 @@ namespace TaskManagement.Infrastructure.Services
             _jwtSettings=jwtSettings.Value;
         }
 
-        public string GenerateToken(Guid UserId, string Email)
+        public string GenerateToken(Guid UserId, string Email,string role)
         {
             var claims = new List<Claim>
             {
                 new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, UserId.ToString()),
                 new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, Email),
-                new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new System.Security.Claims.Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_jwtSettings.Secret));

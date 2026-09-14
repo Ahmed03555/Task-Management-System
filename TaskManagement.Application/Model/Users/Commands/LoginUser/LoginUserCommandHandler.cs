@@ -35,7 +35,7 @@ namespace TaskManagement.Application.Model.Users.Commands.LoginUser
             if(!isPasswordValid)
                 return Result<string>.Failure("Invalid email or password.");
 
-            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.Email);
+            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.Email,user.Role.ToString());
 
             return Result<string>.Success(token);
         }

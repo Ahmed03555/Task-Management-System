@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Tasks.Commands.CreateTask;
 using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject;
+using TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus;
 
 namespace Task_Management_System.Controllers
 {
@@ -47,7 +48,23 @@ namespace Task_Management_System.Controllers
                 return BadRequest(result.Error);
 
             return Ok(result.Value);
-        } 
+        }
+        #endregion
+
+
+        #region UpdateTaskStatusCommand
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> UpdateTaskStatus(Guid id , UpdateTaskStatusCommand command , CancellationToken cancellationToken)
+        {
+            if(id != command.Id)
+            {
+                return BadRequest("Task ID mismatch.");
+            }
+            var result = await _mediator.Send(command, cancellationToken);
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+            return NoContent();
+        }
         #endregion
     }
 }

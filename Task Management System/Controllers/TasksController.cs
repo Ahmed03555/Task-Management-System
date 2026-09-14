@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Tasks.Commands.CreateTask;
 using TaskManagement.Application.Model.Tasks.Commands.DeleteTask;
+using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTaskById;
 using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject;
 using TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus;
 
@@ -76,6 +77,15 @@ namespace Task_Management_System.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
             return NoContent();
+        }
+        #endregion
+
+        #region GetTaskById
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetTaskByIdQuery(id), ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Comments.AddComment;
+using TaskManagement.Application.Model.Comments.DeleteComment;
 
 namespace Task_Management_System.Controllers
 {
@@ -23,6 +24,15 @@ namespace Task_Management_System.Controllers
             var result = await _sender.Send(command, cancellationToken);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error
                 );
+        }
+        #endregion
+
+        #region DeleteComment
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
+        {
+            var result = await _sender.Send(new DeleteCommentCommand(id), cancellationToken);
+            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
         }
         #endregion
     }

@@ -55,7 +55,7 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
 #endregion
 var app = builder.Build();
 
-#region MyRegion
+#region SeedData
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -64,6 +64,7 @@ using (var scope = app.Services.CreateScope())
 
     await dbContext.Database.MigrateAsync();
     await DbSeeder.SeedAdminUserAsync(dbContext, passwordHasher, adminSettings,CancellationToken.None);
+    await JsonDataSeeder.SeedFromJsonAsync(dbContext, CancellationToken.None);
 }
 #endregion
 // Configure the HTTP request pipeline.

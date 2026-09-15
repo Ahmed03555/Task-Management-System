@@ -26,4 +26,12 @@
     <ProjectReference Include="..\TaskManagement.Application\TaskManagement.Application.csproj" />
   </ItemGroup>
 
+
+
+	<ItemGroup>
+		<None Include="Persistence\SeedData\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

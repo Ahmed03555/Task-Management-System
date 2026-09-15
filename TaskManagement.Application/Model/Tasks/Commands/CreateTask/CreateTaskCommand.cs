@@ -13,7 +13,7 @@ namespace TaskManagement.Application.Model.Tasks.Commands.CreateTask
 string Title,
 string? Description,
 TaskPriority Priority,
-Guid? ProjectId
+Guid ProjectId
 ) : IRequest<Result<Guid>>; 
     #endregion
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Comments.AddComment;
 using TaskManagement.Application.Model.Comments.DeleteComment;
+using TaskManagement.Application.Model.Comments.Queries;
 
 namespace Task_Management_System.Controllers
 {
@@ -33,6 +34,19 @@ namespace Task_Management_System.Controllers
         {
             var result = await _sender.Send(new DeleteCommentCommand(id), cancellationToken);
             return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+        #endregion
+
+        #region GetTaskComments
+        [HttpGet("task/{taskItemId}")]
+        public async Task<IActionResult> GetByTask(
+           Guid taskItemId,
+           [FromQuery] int pageNumber = 1,
+           [FromQuery] int pageSize = 10,
+           CancellationToken ct = default)
+        {
+            var result = await _sender.Send(new GetTaskCommentsQuery(taskItemId, pageNumber, pageSize), ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagement.Application.Model.Comments.Common;
 using TaskManagement.Application.Model.Projects.Common;
 using TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProject;
 using TaskManagement.Application.Model.Users.Commands.Queries.GetAllUsers;
@@ -31,6 +32,11 @@ namespace TaskManagement.Application.Common.Mappings
             #region User
             CreateMap<User, UserDto>()
                 .ForMember(d => d.Role, opt => opt.MapFrom(s => s.Role.ToString()));
+            #endregion
+
+            #region Comment
+            CreateMap<Comment, CommentDto>()
+                .ForMember(c => c.AuthorName, opt => opt.MapFrom(s => s.Author.FullName));
             #endregion
         }
     } 

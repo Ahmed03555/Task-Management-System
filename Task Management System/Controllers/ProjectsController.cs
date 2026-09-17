@@ -13,7 +13,7 @@ namespace Task_Management_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
         private readonly ISender _mediator;
@@ -35,9 +35,9 @@ namespace Task_Management_System.Controllers
         #region GetUserProjects
         [HttpGet]
         public async Task<IActionResult> GetMyProjects([FromQuery] int pageNumber = 1,
-         [FromQuery] int pageSize = 10, CancellationToken ct = default)
+         [FromQuery] int pageSize = 10, [FromQuery] Guid? ownerId = null, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetUserProjectsQuery(pageNumber, pageSize), ct);
+            var result = await _mediator.Send(new GetUserProjectsQuery(pageNumber, pageSize, ownerId), ct);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion

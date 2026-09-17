@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Application.Model.Users.Commands.DeleteUser;
 using TaskManagement.Application.Model.Users.Commands.LoginUser;
 using TaskManagement.Application.Model.Users.Commands.Queries.GetAllUsers;
+using TaskManagement.Application.Model.Users.Commands.Queries.GetUserById;
 using TaskManagement.Application.Model.Users.Commands.RegisterUser;
+using TaskManagement.Application.Model.Users.Commands.UpdateUserRole;
 
 namespace Task_Management_System.Controllers
 {
@@ -53,9 +55,34 @@ namespace Task_Management_System.Controllers
         #region GetAllUser
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllUsers([FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10,CancellationToken ct = default)
+        public async Task<IActionResult> GetAllUsers([FromQuery] int pageNumber = 1,[FromQuery] int pageSize = 10, [FromQuery] string? search = null, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetAllUsersQuery(pageNumber, pageSize), ct);
+            var result = await _mediator.Send(new GetAllUsersQuery(pageNumber, pageSize,search), ct);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+        #endregion
+
+        #region Update Role
+        [HttpPatch("{id}/role")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUserRole(Guid id, UpdateUserRoleCommand command, CancellationToken ct)
+        {
+            if (id != command.Id)
+                return BadRequest("Id mismatch.");
+
+            var result = await _mediator.Send(command, ct);
+            return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        }
+        #endregion
+
+
+        #region GetUserById
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetUserById(Guid id, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetUserByIdQuery(id), ct);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         #endregion

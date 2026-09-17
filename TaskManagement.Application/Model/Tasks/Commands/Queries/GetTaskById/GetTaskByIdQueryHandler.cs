@@ -30,7 +30,7 @@ namespace TaskManagement.Application.Model.Tasks.Commands.Queries.GetTaskById
             if (task == null)
                 return Result<TaskDto>.Failure("Task not found");
 
-            if(task.Project.OwnerId != _currentUserService.UserId)
+            if(task.Project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result<TaskDto>.Failure("You are not authorized to view this task");
 
             return Result<TaskDto>.Success(_mapper.Map<TaskDto>(task));

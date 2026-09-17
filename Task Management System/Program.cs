@@ -52,9 +52,22 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
 });
 });
 
-#endregion
-var app = builder.Build();
 
+#endregion
+#region FrontEnd
+builder.Services.AddCors(options =>
+{
+options.AddPolicy("AllowFrontend", policy =>
+{
+policy.WithOrigins("http://localhost:5173")
+      .AllowAnyHeader()
+      .AllowAnyMethod();
+});
+}); 
+#endregion
+
+var app = builder.Build();
+app.UseCors("AllowFrontend");
 #region SeedData
 using (var scope = app.Services.CreateScope())
 {
@@ -75,7 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
-
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 

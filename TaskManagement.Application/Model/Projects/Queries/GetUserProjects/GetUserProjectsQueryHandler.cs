@@ -28,18 +28,28 @@ namespace TaskManagement.Application.Model.Projects.Queries.GetUserProjects
 
         public async Task<Result<PaginatedList<ProjectDto>>> Handle(GetUserProjectsQuery request, CancellationToken cancellationToken)
         {
-             if(_currentUserService.UserId is null)
+            if (_currentUserService.UserId is null)
                 return Result<PaginatedList<ProjectDto>>.Failure("User is not authenticated.");
 
-            var projects = _context.projects
-               .Where(p => p.OwnerId == _currentUserService.UserId)
-               .OrderByDescending(p => p.CreatedAt)
-               .ProjectTo<ProjectDto>(_mapper.ConfigurationProvider)
-               ;
+            var query = _context.projects.AsQueryable();
 
+            if (_currentUserService.IsAdmin)
+            {
+                if (request.OwnerId.HasValue)
+                    query = query.Where(p => p.OwnerId == request.OwnerId.Value);
+                
+            }
+            else
+            {
+                query = query.Where(p => p.OwnerId == _currentUserService.UserId.Value);
+            }
+
+            var projected = query
+                .OrderByDescending(p => p.CreatedAt)
+                .ProjectTo<ProjectDto>(_mapper.ConfigurationProvider);   
 
             var paginatedList = await PaginatedList<ProjectDto>.CreateAsync(
-                 projects, request.PageNumber, request.PageSize, cancellationToken);
+                projected, request.PageNumber, request.PageSize, cancellationToken);
 
             return Result<PaginatedList<ProjectDto>>.Success(paginatedList);
         }

@@ -27,7 +27,7 @@ namespace TaskManagement.Application.Model.Tasks.Commands.DeleteTask
             if(task is null)
                 return Result.Failure("Task not found.");
 
-            if (task.Project.OwnerId != _currentUserService.UserId)
+            if (task.Project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
             {
                 return Result.Failure("You are not authorized to delete this task.");
 

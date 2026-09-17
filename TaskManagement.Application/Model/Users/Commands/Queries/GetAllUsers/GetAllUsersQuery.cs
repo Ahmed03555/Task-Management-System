@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace TaskManagement.Application.Model.Users.Commands.Queries.GetAllUsers
 {
     public record GetAllUsersQuery(int PageNumber = 1,
-        int PageSize = 10) : IRequest<Result<PaginatedList<UserDto>>>;
+        int PageSize = 10,
+        string? Search = null ) : IRequest<Result<PaginatedList<UserDto>>>;
     
     
 }

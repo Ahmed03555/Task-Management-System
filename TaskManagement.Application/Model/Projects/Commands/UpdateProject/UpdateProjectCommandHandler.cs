@@ -28,7 +28,7 @@ namespace TaskManagement.Application.Model.Projects.Commands.UpdateProject
             if(entity is null)
                 return Result<Guid>.Failure("Project not found.");
 
-            if (entity.OwnerId != _currentUserService.UserId)
+            if (entity.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result<Guid>.Failure("You are not authorized to update this project.");
 
             entity.ProjectName = request.Name;

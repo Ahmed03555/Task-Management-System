@@ -26,7 +26,20 @@ namespace TaskManagement.Application.Model.Users.Commands.Queries.GetAllUsers
 
         public async Task<Result<PaginatedList<UserDto>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var user =  _applicationDbContext.users.OrderByDescending(u => u.CreatedAt).ProjectTo<UserDto>(mapper.ConfigurationProvider);
+            #region Search
+
+            var query = _applicationDbContext.users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim().ToLower();
+                query = query.Where(u => u.FullName.ToLower().Contains(search) || u.Email.ToLower().Contains(search));
+            }
+            #endregion
+
+
+
+            var user = query.OrderByDescending(u => u.CreatedAt).ProjectTo<UserDto>(mapper.ConfigurationProvider);
             var page = await PaginatedList<UserDto>.CreateAsync(user, request.PageNumber, request.PageSize, cancellationToken);
 
             return Result<PaginatedList<UserDto>>.Success(page);

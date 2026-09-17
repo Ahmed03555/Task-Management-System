@@ -28,7 +28,7 @@ namespace TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus
             if(task is null)
                 return Result.Failure($"Task with Id {request.Id} not found.");
             
-            if(task.Project.OwnerId != _currentUserService.UserId)
+            if(task.Project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result.Failure($"You are not authorized to update the status of this task.");
 
             task.Satus = request.TaskStatus;

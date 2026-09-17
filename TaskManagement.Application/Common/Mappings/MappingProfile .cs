@@ -26,7 +26,8 @@ namespace TaskManagement.Application.Common.Mappings
             #region Project
 
             CreateMap<Project, ProjectDto>();
-
+            CreateMap<Project, ProjectDto>()
+                   .ForMember(d => d.OwnerName, opt => opt.MapFrom(s => s.Owner.FullName));
             #endregion
 
             #region User

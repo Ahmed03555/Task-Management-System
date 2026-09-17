@@ -22,7 +22,7 @@ namespace TaskManagement.Application.Model.Projects.Commands.CreateProject
 
         public async Task<Result<Guid>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
-            if(_currentUserService.UserId is null)
+            if( _currentUserService.UserId is null)
                 return Result<Guid>.Failure("User is not authenticated.");
 
             var project = new Project

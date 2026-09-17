@@ -14,7 +14,7 @@ namespace Task_Management_System.Controllers
     [ApiController]
 
     #region When To Authorize Section
-    //[Authorize] 
+    [Authorize]
     #endregion
     public class TasksController : ControllerBase
     {

@@ -31,7 +31,7 @@ namespace TaskManagement.Application.Model.Projects.Queries.GetProjectById
             if(project is null)
                 return Result<ProjectDto>.Failure("Project not found");
 
-            if(project.OwnerId != _currentUserService.UserId)
+            if(project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result<ProjectDto>.Failure("You are not authorized to access this project");
             
             var projectDto = _mapper.Map<ProjectDto>(project);

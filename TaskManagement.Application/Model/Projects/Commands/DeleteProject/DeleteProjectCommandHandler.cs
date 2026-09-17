@@ -27,7 +27,7 @@ namespace TaskManagement.Application.Model.Projects.Commands.DeleteProject
             if(project is null)
                 return Result.Failure($"Project with Id {request.Id} not found.");
 
-            if(project.OwnerId != _currentUserService.UserId)
+            if(project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result.Failure("You are not authorized to delete this project.");
 
             _context.projects.Remove(project);

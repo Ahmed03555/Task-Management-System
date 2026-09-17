@@ -69,6 +69,17 @@ namespace TaskManagement.Infrastructure
             #region AdminSeedSettings
             services.Configure<AdminSeedSettings>(configuration.GetSection("AdminSeed"));
             #endregion
+
+            // في Program.cs، قبل builder.Build()
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173", "http://localhost:3000")  
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
             return services;
         }
     } 

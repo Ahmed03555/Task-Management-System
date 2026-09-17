@@ -10,8 +10,8 @@ namespace TaskManagement.Application.Model.Projects.Queries.GetUserProjects
 {
     public record GetUserProjectsQuery(
         int PageNumber = 1,
-        int PageSize = 10
-        ) : IRequest<Result<PaginatedList<ProjectDto>>>;
+        int PageSize = 10,
+       Guid? OwnerId = null) : IRequest<Result<PaginatedList<ProjectDto>>>;
     
     
 }

@@ -26,5 +26,7 @@ namespace TaskManagement.Infrastructure.Services
                return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
             }
         }
+
+        public bool IsAdmin => _httpContextAccessor.HttpContext?.User.IsInRole("Admin") ?? false;
     }
 }

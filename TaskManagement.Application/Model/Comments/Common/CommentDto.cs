@@ -12,6 +12,7 @@ namespace TaskManagement.Application.Model.Comments.Common
         public Guid Id { get; set; }
         public string Content { get; set; } = string.Empty;
         public string AuthorName { get; set; } = string.Empty;
+        public Guid AuthorId { get; set; }
 
         public DateTime CreatedAt
         {

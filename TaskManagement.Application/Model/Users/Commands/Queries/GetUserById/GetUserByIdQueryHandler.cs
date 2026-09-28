@@ -16,18 +16,29 @@ namespace TaskManagement.Application.Model.Users.Commands.Queries.GetUserById
         private readonly IMapper _mapper;
         private readonly IApplicationDbContext _applicationDbContext;
 
-        public GetUserByIdQueryHandler(IMapper mapper, IApplicationDbContext applicationDbContext)
+        private readonly ICacheService _cacheService;
+
+        public GetUserByIdQueryHandler(IMapper mapper, IApplicationDbContext applicationDbContext,ICacheService cacheService)
         {
             _mapper=mapper;
             _applicationDbContext=applicationDbContext;
+            _cacheService =cacheService;
         }
 
         public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
+            var cacheKey = $"{request.Id}";
+            var cache = await _cacheService.GetAsync<UserDto>(cacheKey,cancellationToken);
+
+            if (cache is not null)
+                return Result<UserDto>.Success(cache);
+
             var user = await _applicationDbContext.users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
             if (user is null)
                 return Result<UserDto>.Failure("User not found");
+
+            await _cacheService.SetAsync(cacheKey, _mapper.Map<UserDto>(user), TimeSpan.FromMinutes(5), cancellationToken);
 
             return Result<UserDto>.Success(_mapper.Map<UserDto>(user));
         }

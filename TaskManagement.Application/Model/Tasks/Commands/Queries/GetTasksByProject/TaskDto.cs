@@ -14,6 +14,8 @@ namespace TaskManagement.Application.Model.Tasks.Commands.Queries.GetTasksByProj
         public string? Description { get; set; }
         public string Status { get; set; } = default!;
         public string Priority { get; set; } = default!;
+
+        public Guid ProjectOwnerId { get; set; }
         public DateTime? DueDate { get; set; }
     } 
     #endregion

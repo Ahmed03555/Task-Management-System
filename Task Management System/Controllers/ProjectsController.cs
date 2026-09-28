@@ -24,11 +24,22 @@ namespace Task_Management_System.Controllers
         }
 
         #region CreateProject
+        //[HttpPost]
+        //public async Task<IActionResult> CreateProject(CreateProjectCommand command)
+        //{
+        //    var result = await _mediator.Send(command);
+        //    return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        //}
+
         [HttpPost]
-        public async Task<IActionResult> CreateProject(CreateProjectCommand command)
+        public async Task<IActionResult> CreateProject(
+    [FromBody] CreateProjectCommand command,
+    CancellationToken ct)
         {
-            var result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            var result = await _mediator.Send(command, ct);
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
         }
         #endregion
 

@@ -8,6 +8,7 @@ using TaskManagement.Infrastructure;
 using TaskManagement.Infrastructure.Persistence;
 using TaskManagement.Application.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Application.Common.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationDependencyInjection();
 builder.Services.AddInfrastructureDependencyInjection(builder.Configuration); 
 #endregion
-builder.Services.AddControllers();
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -57,17 +64,24 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
 #region FrontEnd
 builder.Services.AddCors(options =>
 {
-options.AddPolicy("AllowFrontend", policy =>
-{
-policy.WithOrigins("http://localhost:5173")
-      .AllowAnyHeader()
-      .AllowAnyMethod();
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
-}); 
 #endregion
 
+builder.Services.AddSignalR();
+
+
+
 var app = builder.Build();
-app.UseCors("AllowFrontend");
 #region SeedData
 using (var scope = app.Services.CreateScope())
 {
@@ -94,4 +108,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHub<CommentsHub>("/hubs/comments");
 app.Run();

@@ -20,12 +20,12 @@ namespace TaskManagement.Application.Common.Mappings
             #region Task
             CreateMap<TaskItem, TaskDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Satus.ToString()))
-                .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority.ToString()));
+                .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority.ToString()))
+                .ForMember(des => des.ProjectOwnerId, opt => opt.MapFrom(src => src.Project.OwnerId));
             #endregion
 
             #region Project
 
-            CreateMap<Project, ProjectDto>();
             CreateMap<Project, ProjectDto>()
                    .ForMember(d => d.OwnerName, opt => opt.MapFrom(s => s.Owner.FullName));
             #endregion

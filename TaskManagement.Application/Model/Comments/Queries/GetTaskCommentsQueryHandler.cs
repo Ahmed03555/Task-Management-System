@@ -32,10 +32,10 @@ namespace TaskManagement.Application.Model.Comments.Queries
             if (task is null)
                 return Result<PaginatedList<CommentDto>>.Failure("Task not found");
 
-            if (task.Project.OwnerId != _currentUserService.UserId)
+            if (task.Project.OwnerId != _currentUserService.UserId && !_currentUserService.IsAdmin)
                 return Result<PaginatedList<CommentDto>>.Failure("You are not authorized to view these comments.");
 
-            var query =  _context.comments.Where(c => c.TaskItemId == request.Id).OrderByDescending(c => c.CreatedAt)
+            var query =  _context.comments.Where(c => c.TaskItemId == request.Id).OrderBy(c => c.CreatedAt)
                   .ProjectTo<CommentDto>(_mapper.ConfigurationProvider);
 
             var page = await PaginatedList<CommentDto>.CreateAsync(query,request.PageNamber,request.PageSize,cancellationToken);

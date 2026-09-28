@@ -14,10 +14,13 @@ namespace TaskManagement.Application.Model.Projects.Commands.DeleteProject
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
 
-        public DeleteProjectCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+        private readonly ICacheService _cacheService;
+
+        public DeleteProjectCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService,ICacheService cacheService)
         {
             _context=context;
             _currentUserService=currentUserService;
+            _cacheService=cacheService;
         }
 
         public async Task<Result> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
@@ -33,6 +36,7 @@ namespace TaskManagement.Application.Model.Projects.Commands.DeleteProject
             _context.projects.Remove(project);
             await _context.SaveChangesAsync(cancellationToken);
 
+            await _cacheService.RemoveAsync($"project:{request.Id}", cancellationToken);
             return Result.Success();
         }
     }

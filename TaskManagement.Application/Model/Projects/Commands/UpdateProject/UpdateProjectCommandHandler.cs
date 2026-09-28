@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagement.Application.Common.Interface;
+using TaskManagement.Domain.Entities;
 
 namespace TaskManagement.Application.Model.Projects.Commands.UpdateProject
 {
@@ -14,11 +15,13 @@ namespace TaskManagement.Application.Model.Projects.Commands.UpdateProject
     {
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ICacheService _cacheService;
 
-        public UpdateProjectCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+        public UpdateProjectCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService,ICacheService cacheService)
         {
             _context=context;
             _currentUserService=currentUserService;
+            _cacheService = cacheService;
         }
 
         public async Task<Result<Guid>> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
@@ -36,7 +39,7 @@ namespace TaskManagement.Application.Model.Projects.Commands.UpdateProject
             entity.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync(cancellationToken);
-
+            await _cacheService.RemoveAsync($"project{entity.Id}", cancellationToken);
             return Result<Guid>.Success(entity.Id);
         }
     }

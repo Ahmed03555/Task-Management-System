@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TaskManagement.Application.Model
@@ -14,13 +15,16 @@ namespace TaskManagement.Application.Model
         public int TotalPages { get; }
         public int TotalCount { get; }
 
-        public PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
+        [JsonConstructor]
+        public PaginatedList(List<T> items, int pageNumber, int totalPages, int totalCount)
         {
-            PageNumber = pageNumber;
-            TotalCount = count;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             Items = items;
+            PageNumber = pageNumber;
+            TotalPages = totalPages;
+            TotalCount = totalCount;
         }
+
+
 
         public bool HasPreviousPage => PageNumber > 1;
         public bool HasNextPage => PageNumber < TotalPages;

@@ -14,11 +14,14 @@ namespace TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus
     {
         private readonly IApplicationDbContext _taskRepository;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ICacheService _cacheService;
 
-        public UpdateTaskStatusCommandHandler(IApplicationDbContext taskRepository, ICurrentUserService currentUserService)
+        public UpdateTaskStatusCommandHandler(IApplicationDbContext taskRepository, ICurrentUserService currentUserService,ICacheService cacheService)
         {
             _taskRepository=taskRepository;
             _currentUserService=currentUserService;
+            _cacheService = cacheService;
+            
         }
 
         public async Task<Result> Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
@@ -35,6 +38,10 @@ namespace TaskManagement.Application.Model.Tasks.Commands.UpdateTaskStatus
             task.UpdatedAt = DateTime.UtcNow;
 
             await _taskRepository.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.SetAsync("tasks:version", Guid.NewGuid().ToString(), TimeSpan.FromDays(7), cancellationToken);
+
+            await _cacheService.RemoveAsync($"tasks:{request.Id}", cancellationToken);
 
             return Result.Success();
 

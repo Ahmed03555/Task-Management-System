@@ -15,11 +15,12 @@ namespace TaskManagement.Application.Model.Users.Commands.RegisterUser
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
-
-        public RegisterUserCommandHandler(IApplicationDbContext dbContext, IPasswordHasher passwordHasher)
+        private readonly ICacheService _cacheServices;
+        public RegisterUserCommandHandler(IApplicationDbContext dbContext, IPasswordHasher passwordHasher,ICacheService cacheService)
         {
             _dbContext=dbContext;
             _passwordHasher=passwordHasher;
+            _cacheServices = cacheService;
         }
 
         public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -39,7 +40,7 @@ namespace TaskManagement.Application.Model.Users.Commands.RegisterUser
 
             await _dbContext.users.AddAsync(user, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-
+            await _cacheServices.SetAsync("users:version", Guid.NewGuid().ToString(), TimeSpan.FromDays(7), cancellationToken);
             return Result<Guid>.Success(user.Id);
 
         } 

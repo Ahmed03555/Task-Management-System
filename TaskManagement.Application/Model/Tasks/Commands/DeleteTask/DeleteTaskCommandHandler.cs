@@ -13,11 +13,13 @@ namespace TaskManagement.Application.Model.Tasks.Commands.DeleteTask
     {
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ICacheService _cacheService;
 
-        public DeleteTaskCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+        public DeleteTaskCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService,ICacheService cacheService)
         {
             _context=context;
             _currentUserService=currentUserService;
+            _cacheService=cacheService;
         }
 
         public async Task<Result> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
@@ -35,6 +37,10 @@ namespace TaskManagement.Application.Model.Tasks.Commands.DeleteTask
 
             _context.tasks.Remove(task);
             await _context.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.SetAsync("task:version", Guid.NewGuid().ToString(), TimeSpan.FromDays(7), cancellationToken);
+
+            await _cacheService.RemoveAsync($"{request.Id}", cancellationToken);
 
             return Result.Success();
         }

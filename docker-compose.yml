@@ -9,6 +9,7 @@ services:
       - "5000:8080"
     depends_on:
       - db
+       - redis 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=TaskManagementDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
@@ -19,6 +20,7 @@ services:
       - AdminSeed__Email=admin@taskmanagement.com
       - AdminSeed__Password=Admin@123456
       - AdminSeed__FullName=System Admin
+      - ConnectionStrings__Redis=redis:6379
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -30,5 +32,15 @@ services:
     volumes:
       - sqldata:/var/opt/mssql
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
 volumes:
   sqldata:
+   redisdata:
+
+ 

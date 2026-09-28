@@ -14,10 +14,13 @@ namespace TaskManagement.Application.Model.Users.Commands.UpdateUserRole
         private readonly IApplicationDbContext _applicationDbContext;
         private readonly ICurrentUserService _currentUserService;
 
-        public UpdateUserRoleCommandHandler(IApplicationDbContext applicationDbContext, ICurrentUserService currentUserService)
+        private readonly ICacheService _cacheService;
+
+        public UpdateUserRoleCommandHandler(IApplicationDbContext applicationDbContext, ICurrentUserService currentUserService,ICacheService cacheService)
         {
             _applicationDbContext=applicationDbContext;
             _currentUserService=currentUserService;
+            _cacheService = cacheService;
         }
 
         public async Task<Result> Handle(UpdateUserRoleCommand request, CancellationToken cancellationToken)
@@ -33,6 +36,10 @@ namespace TaskManagement.Application.Model.Users.Commands.UpdateUserRole
             user.Role = request.Role;
 
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.SetAsync("users:version", Guid.NewGuid().ToString(), TimeSpan.FromDays(7), cancellationToken);
+
+            await _cacheService.RemoveAsync($"user:{request.Id}", cancellationToken);
 
             return Result.Success();
         }

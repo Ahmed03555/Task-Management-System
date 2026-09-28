@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TaskManagement.Application.Model.Projects.Commands.CreateProject
 {
     public record CreateProjectCommand(string Name,
-        string? Description) : IRequest<Result<Guid>>
+        string? Description , Guid? OwnerId = null) : IRequest<Result<Guid>>
     {
     }
 }

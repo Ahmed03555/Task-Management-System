@@ -1,8 +1,8 @@
 # Task Management System
 
-A full-stack Task Management System built with **ASP.NET Core Web API** and **React**, designed to help users organize projects, manage tasks, collaborate, and track progress through a clean and maintainable architecture.
+A RESTful Task Management System built using **ASP.NET Core Web API**, following Clean Architecture principles and applying modern software design patterns to create a maintainable, scalable, and testable backend application.
 
-The project focuses on applying software engineering principles, Design Patterns, and Clean Architecture to build a scalable and testable application.
+The system provides APIs for managing users, projects, tasks, and collaboration features, with authentication, authorization, and structured request handling.
 
 ---
 
@@ -11,42 +11,41 @@ The project focuses on applying software engineering principles, Design Patterns
 ### Authentication & Authorization
 
 * User Registration and Login.
-* Role-based access control.
+* Role-Based Access Control.
 * Secure API endpoints.
 * User management and role updates.
 
 ### Project Management
 
-* Create, view, update, and delete projects.
+* Create and manage projects.
 * Assign project ownership.
 * Retrieve projects with pagination.
 * Search and filter project data.
 
 ### Task Management
 
-* Create and manage tasks.
+* Create, retrieve, update, and delete tasks.
 * Associate tasks with projects.
 * Retrieve tasks by project.
-* Track task information and status.
+* Manage task-related information.
 
 ### Collaboration
 
-* Comments associated with tasks.
+* Task comments.
 * Organized project and task workflows.
 
-### API Features
+### API Capabilities
 
 * RESTful API design.
 * Pagination and searching.
+* Request validation.
 * Centralized request handling.
 * Consistent API responses.
-* Input validation and error handling.
+* Error handling.
 
 ---
 
 ## 🛠️ Tech Stack
-
-### Backend
 
 | Technology            | Purpose                                 |
 | --------------------- | --------------------------------------- |
@@ -54,30 +53,18 @@ The project focuses on applying software engineering principles, Design Patterns
 | ASP.NET Core Web API  | RESTful API development                 |
 | Entity Framework Core | ORM and database access                 |
 | SQL Server            | Relational database                     |
-| MediatR               | Request handling and Mediator Pattern   |
+| MediatR               | Mediator Pattern and request handling   |
 | CQRS                  | Separation of read and write operations |
 | AutoMapper            | Object-to-object mapping                |
 | FluentValidation      | Request validation                      |
 | JWT                   | Authentication                          |
 | Dependency Injection  | Loose coupling and testability          |
 
-### Frontend
-
-| Technology   | Purpose               |
-| ------------ | --------------------- |
-| React        | User interface        |
-| TypeScript   | Type-safe development |
-| React Router | Client-side routing   |
-| Axios        | HTTP requests         |
-| Tailwind CSS | UI styling            |
-
 ---
 
 ## 🏗️ Architecture
 
-The backend follows **Clean Architecture** principles to separate business logic from infrastructure and presentation concerns.
-
-### Architecture Layers
+The project follows **Clean Architecture** principles, separating business logic from infrastructure and presentation concerns.
 
 ```text
 Task Management System
@@ -98,7 +85,7 @@ Task Management System
 ├── Infrastructure
 │   ├── Database
 │   ├── Entity Framework Core
-│   └── External Implementations
+│   └── Implementations
 │
 └── WebApi
     ├── Controllers
@@ -110,27 +97,27 @@ Task Management System
 ### Request Flow
 
 ```text
-React Frontend
-      │
-      ▼
-ASP.NET Core Controller
-      │
-      ▼
+HTTP Request
+     │
+     ▼
+API Controller
+     │
+     ▼
 MediatR
-      │
-      ▼
+     │
+     ▼
 Command / Query
-      │
-      ▼
+     │
+     ▼
 Handler
-      │
-      ▼
+     │
+     ▼
 Application Abstractions
-      │
-      ▼
+     │
+     ▼
 Infrastructure
-      │
-      ▼
+     │
+     ▼
 SQL Server
 ```
 
@@ -138,14 +125,9 @@ SQL Server
 
 ## 🧩 Design Patterns
 
-The project applies several design patterns and architectural concepts to improve maintainability, scalability, and testability.
-
 ### 1. CQRS Pattern
 
-Separates operations that modify data from operations that retrieve data.
-
-* **Commands:** CreateProjectCommand, CreateTaskCommand, DeleteTaskCommand.
-* **Queries:** GetAllProjectsQuery, GetTaskByIdQuery.
+Separates operations that modify data (Commands) from operations that retrieve data (Queries).
 
 **Why?**
 
@@ -156,9 +138,7 @@ Separates operations that modify data from operations that retrieve data.
 
 ### 2. Mediator Pattern
 
-Implemented using MediatR to decouple controllers from application logic.
-
-Controllers send requests to the mediator, which dispatches them to their corresponding handlers.
+Implemented using MediatR to decouple API controllers from application logic.
 
 **Why?**
 
@@ -169,12 +149,12 @@ Controllers send requests to the mediator, which dispatches them to their corres
 
 ### 3. Dependency Injection
 
-Dependencies are injected through constructors and managed by the ASP.NET Core DI container.
+Uses constructor injection and the ASP.NET Core DI container to manage dependencies.
 
 **Why?**
 
 * Loose coupling.
-* Easier unit testing.
+* Improved testability.
 * Flexible implementations.
 * Better dependency management.
 
@@ -190,7 +170,7 @@ Uses `IApplicationDbContext` to abstract database access from application handle
 
 ### 5. DTO Pattern
 
-Uses Data Transfer Objects to control the data transferred between application layers and API clients.
+Uses Data Transfer Objects to control data exchanged between application layers and API clients.
 
 **Why?**
 
@@ -207,7 +187,7 @@ Provides a structured way to represent successful and failed operations.
 
 * Consistent operation responses.
 * Cleaner error handling.
-* Easier frontend integration.
+* Easier API integration.
 
 ### 7. Pagination
 
@@ -218,28 +198,6 @@ Retrieves large datasets in smaller pages instead of loading all records at once
 * Reduces response payload size.
 * Improves API efficiency.
 * Supports scalable data retrieval.
-* Improves frontend usability.
-
----
-
-## 📂 Project Structure
-
-```text
-Task-Management-System/
-│
-├── Backend/
-│   ├── TaskManagement.Domain/
-│   ├── TaskManagement.Application/
-│   ├── TaskManagement.Infrastructure/
-│   └── TaskManagement.WebApi/
-│
-├── Frontend/
-│   └── React Application
-│
-└── README.md
-```
-
-*The directory names above represent the logical project organization. Adjust them to match the actual repository structure.*
 
 ---
 
@@ -247,11 +205,9 @@ Task-Management-System/
 
 ### Prerequisites
 
-Make sure you have installed:
-
 * .NET SDK
 * SQL Server
-* Node.js and npm
+* Visual Studio 2022 or Visual Studio Code
 * Git
 
 ### 1. Clone the Repository
@@ -262,21 +218,9 @@ git clone https://github.com/Ahmed03555/Task-Management-System.git
 cd Task-Management-System
 ```
 
-### 2. Backend Setup
+### 2. Configure the Database
 
-Navigate to the backend Web API project:
-
-```bash
-cd Backend/TaskManagement.WebApi
-```
-
-Restore dependencies:
-
-```bash
-dotnet restore
-```
-
-Configure your database connection string in `appsettings.json` or User Secrets.
+Update the connection string in `appsettings.json` or User Secrets.
 
 Example:
 
@@ -288,62 +232,35 @@ Example:
 }
 ```
 
-Apply database migrations:
+### 3. Apply Database Migrations
 
 ```bash
 dotnet ef database update
 ```
 
-Run the API:
+### 4. Run the API
 
 ```bash
+dotnet restore
 dotnet run
 ```
 
-The API will be available at the URL configured in the launch settings.
-
-### 3. Frontend Setup
-
-Navigate to the React application:
-
-```bash
-cd Frontend
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Configure the API base URL in your frontend environment configuration.
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-Open the local URL displayed in your terminal.
-
-> Note: Update the example directory paths and migration commands according to the actual repository structure.
+The API will be available at the URL configured in the project's launch settings.
 
 ---
 
 ## 🔌 API Endpoints
 
-The following are representative endpoints based on the implemented API controllers.
-
 ### Users
 
-| Method | Endpoint               | Description         |
-| ------ | ---------------------- | ------------------- |
-| POST   | `/api/Users/register`  | Register a new user |
-| POST   | `/api/Users/login`     | Authenticate a user |
-| GET    | `/api/Users`           | Get paginated users |
-| GET    | `/api/Users/{id}`      | Get user by ID      |
-| DELETE | `/api/Users/{id}`      | Delete a user       |
-| PUT    | `/api/Users/{id}/role` | Update user role    |
+| Method | Endpoint               | Description              |
+| ------ | ---------------------- | ------------------------ |
+| POST   | `/api/Users/register`  | Register a new user      |
+| POST   | `/api/Users/login`     | Authenticate a user      |
+| GET    | `/api/Users`           | Retrieve paginated users |
+| GET    | `/api/Users/{id}`      | Get user by ID           |
+| DELETE | `/api/Users/{id}`      | Delete a user            |
+| PUT    | `/api/Users/{id}/role` | Update user role         |
 
 ### Projects
 
@@ -351,8 +268,6 @@ The following are representative endpoints based on the implemented API controll
 | ------ | --------------- | ----------------- |
 | GET    | `/api/Projects` | Retrieve projects |
 | POST   | `/api/Projects` | Create a project  |
-
-Additional project and task operations depend on the corresponding controller actions.
 
 ### Pagination Example
 
@@ -362,34 +277,15 @@ GET /api/Users?pageNumber=1&pageSize=10&search=Ahmed
 
 ---
 
-## 🧪 Testing
+## 🎯 Key Learning Outcomes
 
-The architecture supports unit testing by separating application logic from infrastructure dependencies.
-
-Recommended testing areas:
-
-* Command and Query Handlers.
-* Request validators.
-* Business rules.
-* Authorization and access control.
-* API endpoint behavior.
-
----
-
-## 🎯 Learning Objectives
-
-This project demonstrates practical experience with:
-
-* ASP.NET Core Web API development.
-* Clean Architecture.
-* CQRS and MediatR.
-* SOLID principles.
-* Entity Framework Core.
-* Dependency Injection.
-* Authentication and Authorization.
-* RESTful API design.
-* React and TypeScript integration.
-* Maintainable and testable software design.
+* Applying Clean Architecture in ASP.NET Core.
+* Implementing CQRS with MediatR.
+* Building RESTful APIs.
+* Applying SOLID principles and Design Patterns.
+* Implementing authentication and authorization.
+* Working with Entity Framework Core.
+* Designing maintainable and testable backend systems.
 
 ---
 
@@ -400,8 +296,6 @@ This project demonstrates practical experience with:
 Backend Developer | ASP.NET Core | C#
 
 GitHub: [Ahmed03555](https://github.com/Ahmed03555)
-
-Project Repository: [Task Management System](https://github.com/Ahmed03555/Task-Management-System)
 
 ---
 
